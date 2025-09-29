@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>考核评价管理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36CFC9',
+                        accent: '#722ED1',
+                        neutral: '#F2F3F5',
+                        'neutral-dark': '#4E5969',
+                        success: '#52C41A',
+                        warning: '#FAAD14',
+                        danger: '#FF4D4F',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+            .nav-active {
+                @apply bg-primary/10 text-primary border-l-4 border-primary;
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 min-h-screen flex flex-col">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="w-full mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- 左侧Logo和标题 -->
+                <div class="flex items-center space-x-3">
+                    <a href="首页.html">
+                        <i class="fa fa-flask text-primary text-2xl"></i>
+                    </a>
+                    <a href="首页.html">
+                        <h1 class="text-xl font-bold text-gray-800">考核评价管理</h1>
+                    </a>
+                </div>
+                
+                <!-- 右侧用户信息和退出 -->
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-primary transition-all-300">
+                        <i class="fa fa-bell-o text-lg"></i>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <img src="https://picsum.photos/id/1005/40/40" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                        <span class="hidden md:inline text-sm font-medium">张教授</span>
+                        <i class="fa fa-angle-down text-gray-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- 侧边导航 -->
+        <aside class="w-64 bg-white shadow-sm border-r border-gray-200 flex-shrink-0 hidden md:block">
+            <nav class="py-4 h-full flex flex-col">
+                <div class="px-4 mb-4">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">主菜单</p>
+                </div>
+                <ul class="space-y-1 px-2">
+                    <li>
+                        <a href="index.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-home w-5 h-5 mr-3"></i>
+                            首页
+                        </a>
+                    </li>
+                    <li>
+                        <a href="成果类型管理.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-th-list w-5 h-5 mr-3"></i>
+                            成果类型管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="成果录入.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-pencil w-5 h-5 mr-3"></i>
+                            成果录入
+                        </a>
+                    </li>
+                    <li>
+                        <a href="批量导入.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-upload w-5 h-5 mr-3"></i>
+                            批量导入
+                        </a>
+                    </li>
+                    <li>
+                        <a href="成果审核.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-check-square-o w-5 h-5 mr-3"></i>
+                            成果审核
+                        </a>
+                    </li>
+                    <li>
+                        <a href="审核记录.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-history w-5 h-5 mr-3"></i>
+                            审核记录
+                        </a>
+                    </li>
+                    <li>
+                        <a href="成果统计.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-bar-chart w-5 h-5 mr-3"></i>
+                            成果统计
+                        </a>
+                    </li>
+                    <li>
+                        <a href="绩效评价.html" class="nav-active flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <i class="fa fa-trophy w-5 h-5 mr-3"></i>
+                            绩效评价
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-auto px-4 py-4 border-t border-gray-200">
+                    <div class="bg-primary/5 rounded-lg p-3">
+                        <p class="text-xs text-gray-600 mb-2">系统提示</p>
+                        <p class="text-sm text-primary">当前考核周期：2022-2023年度</p>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- 移动端菜单按钮 -->
+        <div class="md:hidden fixed bottom-4 right-4 z-40">
+            <button id="mobile-menu-button" class="bg-primary text-white rounded-full w-12 h-12 shadow-lg flex items-center justify-center">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- 移动端侧边栏 -->
+        <div id="mobile-sidebar" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden md:hidden">
+            <div class="bg-white h-full w-64 shadow-xl transform transition-transform">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h2 class="font-bold">菜单导航</h2>
+                    <button id="close-menu" class="text-gray-500">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <nav class="py-4">
+                    <ul class="space-y-1 px-2">
+                        <li>
+                            <a href="index.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-home w-5 h-5 mr-3"></i>
+                                首页
+                            </a>
+                        </li>
+                        <li>
+                            <a href="成果类型管理.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-th-list w-5 h-5 mr-3"></i>
+                                成果类型管理
+                            </a>
+                        </li>
+                        <li>
+                            <a href="成果录入.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-pencil w-5 h-5 mr-3"></i>
+                                成果录入
+                            </a>
+                        </li>
+                        <li>
+                            <a href="批量导入.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-upload w-5 h-5 mr-3"></i>
+                                批量导入
+                            </a>
+                        </li>
+                        <li>
+                            <a href="成果审核.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-check-square-o w-5 h-5 mr-3"></i>
+                                成果审核
+                            </a>
+                        </li>
+                        <li>
+                            <a href="审核记录.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-history w-5 h-5 mr-3"></i>
+                                审核记录
+                            </a>
+                        </li>
+                        <li>
+                            <a href="成果统计.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-bar-chart w-5 h-5 mr-3"></i>
+                                成果统计
+                            </a>
+                        </li>
+                        <li>
+                            <a href="绩效评价.html" class="nav-active flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                                <i class="fa fa-trophy w-5 h-5 mr-3"></i>
+                                绩效评价
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- 页面内容 -->
+        <main class="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6">
+            <div class="container mx-auto">
+                <!-- 页面标题和筛选器 -->
+                <div class="mb-6">
+                    <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-gray-800">科研绩效评价</h2>
+                    <p class="text-gray-500 mt-1">自动计算科研积分，生成个人和研究室考核结果</p>
+                </div>
+
+                <!-- 考核周期和筛选器 -->
+                <div class="bg-white rounded-lg card-shadow p-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">考核周期</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                                <option value="2022-2023" selected>2024-2025年度（当前）</option>
+                                <option value="2020-2021">2023-2024年度</option>
+                                <option value="2018-2019">2022-2023年度</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">评价对象</label>
+                            <select id="evaluation-target" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                                <option value="office">研究室/中心</option>
+                                <option value="person">个人</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">研究室/中心</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                                <option value="">全部</option>
+                                <option value="1">计算机科学与技术研究室</option>
+                                <option value="2">人工智能研究中心</option>
+                                <option value="3">电子信息工程研究室</option>
+                                <option value="4">材料科学研究所</option>
+                                <option value="5">环境科学与工程研究中心</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-end space-x-3">
+                        <button id="calculate-score" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all-300">
+                            <i class="fa fa-calculator mr-2"></i> 重新计算积分
+                        </button>
+                        <button id="generate-report" class="px-4 py-2 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary/90 transition-all-300">
+                            <i class="fa fa-file-text-o mr-2"></i> 生成年度报告
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 考核标准说明 -->
+                <div class="bg-white rounded-lg card-shadow p-6 mb-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                        <i class="fa fa-info-circle text-primary mr-2"></i> 考核标准说明
+                    </h3>
+                    <div class="text-sm text-gray-700 space-y-3">
+                        <p>研究室实行主任负责制和目标考核制：两年内至少完成7项中的4项。</p>
+                        <p>以下成果可作为通过目标考核的重要依据：</p>
+                        <ul class="list-disc ml-5 space-y-1">
+                            <li>获得国家奖</li>
+                            <li>国家重大专项</li>
+                            <li>重点研发计划</li>
+                            <li>自然科学基金重大和重点项目</li>
+                            <li>国际标准</li>
+                            <li>国家级人才</li>
+                        </ul>
+                        <p>科研积分计算规则：根据成果类型、级别、影响力等因素综合计算，不同类型成果对应不同积分权重。</p>
+                    </div>
+                </div>
+
+                <!-- 研究室考核结果 -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <!-- 左侧：研究室排名 -->
+                    <div class="bg-white rounded-lg card-shadow overflow-hidden lg:col-span-2">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">研究室/中心积分排名</h3>
+                            <p class="text-sm text-gray-500 mt-1">2022-2023年度考核周期</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            排名
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            研究室/中心
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            完成项数
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            总积分
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            考核结果
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr class="hover:bg-gray-50 transition-all-300">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-medium mr-2">1</div>
+                                                <span class="text-sm text-gray-900">第1名</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">人工智能研究中心</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">6项 / 7项</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-primary">2,856.5</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                                优秀
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-primary hover:text-primary/80 view-details" data-id="1">
+                                                详情
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="hover:bg-gray-50 transition-all-300">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center text-xs font-medium mr-2">2</div>
+                                                <span class="text-sm text-gray-900">第2名</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">计算机科学与技术研究室</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">5项 / 7项</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-primary">2,412.3</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                                优秀
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-primary hover:text-primary/80 view-details" data-id="2">
+                                                详情
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="hover:bg-gray-50 transition-all-300">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs font-medium mr-2">3</div>
+                                                <span class="text-sm text-gray-900">第3名</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">电子信息工程研究室</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">5项 / 7项</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-primary">2,105.8</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                                良好
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-primary hover:text-primary/80 view-details" data-id="3">
+                                                详情
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="hover:bg-gray-50 transition-all-300">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center text-xs font-medium mr-2">4</div>
+                                                <span class="text-sm text-gray-900">第4名</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">环境科学与工程研究中心</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">4项 / 7项</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-primary">1,890.2</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning/10 text-warning">
+                                                合格
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-primary hover:text-primary/80 view-details" data-id="4">
+                                                详情
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="hover:bg-gray-50 transition-all-300">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center text-xs font-medium mr-2">5</div>
+                                                <span class="text-sm text-gray-900">第5名</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">材料科学研究所</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">3项 / 7项</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-primary">1,568.7</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-danger/10 text-danger">
+                                                不合格
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="#" class="text-primary hover:text-primary/80 view-details" data-id="5">
+                                                详情
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 右侧：积分分布图表 -->
+                    <div class="bg-white rounded-lg card-shadow overflow-hidden">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">研究室积分分布</h3>
+                            <p class="text-sm text-gray-500 mt-1">各项成果积分占比</p>
+                        </div>
+                        <div class="p-6">
+                            <div class="h-64 mb-6">
+                                <canvas id="officeScoreChart"></canvas>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 rounded-full bg-primary mr-2"></span>
+                                    <span class="text-sm text-gray-700">论文/专著 (35%)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 rounded-full bg-secondary mr-2"></span>
+                                    <span class="text-sm text-gray-700">发明专利 (25%)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 rounded-full bg-accent mr-2"></span>
+                                    <span class="text-sm text-gray-700">项目 (20%)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 rounded-full bg-warning mr-2"></span>
+                                    <span class="text-sm text-gray-700">成果鉴定 (5%)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 rounded-full bg-success mr-2"></span>
+                                    <span class="text-sm text-gray-700">标准 (5%)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 rounded-full bg-danger mr-2"></span>
+                                    <span class="text-sm text-gray-700">获奖 (7%)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="w-3 h-3 rounded-full bg-purple-500 mr-2"></span>
+                                    <span class="text-sm text-gray-700">人才 (3%)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个人考核结果 -->
+                <div class="bg-white rounded-lg card-shadow overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-medium text-gray-900">个人积分排名</h3>
+                        <p class="text-sm text-gray-500 mt-1">2022-2023年度考核周期 · 人工智能研究中心</p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        排名
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        姓名
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        职称
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        成果数量
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        总积分
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        考核结果
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-medium mr-2">1</div>
+                                            <span class="text-sm text-gray-900">第1名</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://picsum.photos/id/1012/32/32" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">李教授</div>
+                                                <div class="text-xs text-gray-500">人工智能研究中心</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">教授</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">12项</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-primary">586.5</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            优秀
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-primary/80">详情</a>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center text-xs font-medium mr-2">2</div>
+                                            <span class="text-sm text-gray-900">第2名</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://picsum.photos/id/1025/32/32" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">张研究员</div>
+                                                <div class="text-xs text-gray-500">人工智能研究中心</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">研究员</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">9项</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-primary">492.3</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            优秀
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-primary/80">详情</a>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs font-medium mr-2">3</div>
+                                            <span class="text-sm text-gray-900">第3名</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://picsum.photos/id/1066/32/32" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">赵副教授</div>
+                                                <div class="text-xs text-gray-500">人工智能研究中心</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">副教授</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">7项</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-primary">385.7</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            良好
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-primary/80">详情</a>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center text-xs font-medium mr-2">4</div>
+                                            <span class="text-sm text-gray-900">第4名</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://picsum.photos/id/1074/32/32" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">陈讲师</div>
+                                                <div class="text-xs text-gray-500">人工智能研究中心</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">讲师</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">5项</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-primary">278.2</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning/10 text-warning">
+                                            合格
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-primary/80">详情</a>
+                                    </td>
+                                </tr>
+                                
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-6 h-6 rounded-full bg-gray-400 text-white flex items-center justify-center text-xs font-medium mr-2">5</div>
+                                            <span class="text-sm text-gray-900">第5名</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://picsum.photos/id/1027/32/32" alt="用户头像" class="w-8 h-8 rounded-full mr-3">
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">王助教</div>
+                                                <div class="text-xs text-gray-500">人工智能研究中心</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">助教</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">3项</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-primary">156.9</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-warning/10 text-warning">
+                                            合格
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a href="#" class="text-primary hover:text-primary/80">详情</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+                        <div class="text-sm text-gray-700">
+                            显示 1 至 5 条，共 28 条记录
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                上一页
+                            </button>
+                            <button class="px-3 py-1 border border-primary bg-primary text-white rounded-md text-sm hover:bg-primary/90">
+                                1
+                            </button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50">
+                                2
+                            </button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50">
+                                3
+                            </button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50">
+                                4
+                            </button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50">
+                                5
+                            </button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50">
+                                下一页
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 研究室详情模态框 -->
+    <div id="office-details-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg w-full max-w-4xl card-shadow transform transition-all max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 id="office-details-title" class="text-lg font-medium text-gray-900">人工智能研究中心 - 考核详情</h3>
+                <button id="close-office-details-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="px-6 py-4 overflow-y-auto flex-1">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-gray-50 p-4 rounded-lg text-center">
+                        <div class="text-sm text-gray-500 mb-1">总积分</div>
+                        <div class="text-3xl font-bold text-primary">2,856.5</div>
+                        <div class="text-xs text-success mt-1 flex items-center justify-center">
+                            <i class="fa fa-arrow-up mr-1"></i> 较上一周期增长 12.5%
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg text-center">
+                        <div class="text-sm text-gray-500 mb-1">完成项数</div>
+                        <div class="text-3xl font-bold text-primary">6/7</div>
+                        <div class="text-xs text-gray-500 mt-1">已完成7项中的6项</div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg text-center">
+                        <div class="text-sm text-gray-500 mb-1">考核结果</div>
+                        <div class="text-2xl font-bold text-success">优秀</div>
+                        <div class="text-xs text-gray-500 mt-1">2022-2023年度</div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium text-gray-900 mb-3">成果完成情况</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium">论文/专著</span>
+                                <span>128项 (456.5分)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium">发明专利</span>
+                                <span>85项 (382.3分)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-secondary h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium">项目</span>
+                                <span>42项 (620.8分)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-accent h-2 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium">成果鉴定</span>
+                                <span>18项 (95.2分)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-warning h-2 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium">标准</span>
+                                <span>12项 (86.7分)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-success h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium">获奖</span>
+                                <span>8项 (156.0分)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-danger h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium">人才</span>
+                                <span>5项 (120.0分)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-purple-500 h-2 rounded-full" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium text-gray-900 mb-3">重点成果</h4>
+                    <div class="space-y-4">
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-all-300">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-medium text-gray-900">国家自然科学基金重点项目：智能信息处理理论与方法研究</div>
+                                    <div class="text-sm text-gray-500 mt-1">项目 · 国家级 · 负责人：李教授</div>
+                                </div>
+                                <div class="text-primary font-medium">200分</div>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-all-300">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-medium text-gray-900">IEEE Transactions on Pattern Analysis and Machine Intelligence 论文3篇</div>
+                                    <div class="text-sm text-gray-500 mt-1">论文/专著 · SCI一区 · 第一作者：张研究员</div>
+                                </div>
+                                <div class="text-primary font-medium">150分</div>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary/50 transition-all-300">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-medium text-gray-900">国家技术发明奖二等奖：基于深度学习的智能识别技术</div>
+                                    <div class="text-sm text-gray-500 mt-1">获奖 · 国家级 · 主要完成人：李教授、张研究员</div>
+                                </div>
+                                <div class="text-primary font-medium">300分</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-3">考核评价</h4>
+                    <div class="bg-gray-50 p-4 rounded-lg text-sm text-gray-700">
+                        <p class="mb-2">人工智能研究中心在2022-2023年度表现优异，完成了7项考核指标中的6项，总积分在各研究室中排名第一。</p>
+                        <p class="mb-2">该中心在重点项目申报和高水平论文发表方面成绩突出，特别是在人工智能基础理论研究和应用技术开发方面取得了重要突破。</p>
+                        <p>建议继续保持优势，加强人才培养和团队建设，争取在国际标准制定方面取得突破，实现全部考核指标的圆满完成。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
+                <button id="download-report" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all-300">
+                    <i class="fa fa-download mr-2"></i> 下载报告
+                </button>
+                <button id="close-office-details" class="px-4 py-2 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary/90 transition-all-300">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 生成报告成功提示 -->
+    <div id="report-success-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg w-full max-w-md card-shadow transform transition-all p-6 text-center">
+            <div class="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center text-success mx-auto mb-4">
+                <i class="fa fa-check text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">年度报告已生成</h3>
+            <p class="text-gray-600 mb-6">研究室年度报告已成功生成，可下载查看详细内容</p>
+            <div class="flex space-x-3">
+                <button id="download-generated-report" class="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all-300">
+                    <i class="fa fa-download mr-2"></i> 下载报告
+                </button>
+                <button id="close-report-success" class="flex-1 px-4 py-2 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary/90 transition-all-300">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 移动端菜单控制
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-sidebar').classList.remove('hidden');
+        });
+        
+        document.getElementById('close-menu').addEventListener('click', function() {
+            document.getElementById('mobile-sidebar').classList.add('hidden');
+        });
+        
+        // 点击侧边栏外部关闭菜单
+        document.getElementById('mobile-sidebar').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+
+        // 评价对象切换
+        document.getElementById('evaluation-target').addEventListener('change', function() {
+            if (this.value === 'person') {
+                alert('将切换到个人绩效评价视图');
+                // 这里应该有切换视图的逻辑
+            } else {
+                alert('将切换到研究室绩效评价视图');
+                // 这里应该有切换视图的逻辑
+            }
+        });
+
+        // 研究室详情查看
+        document.querySelectorAll('.view-details').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                // 根据ID加载不同的研究室详情
+                const officeNames = {
+                    '1': '人工智能研究中心',
+                    '2': '计算机科学与技术研究室',
+                    '3': '电子信息工程研究室',
+                    '4': '环境科学与工程研究中心',
+                    '5': '材料科学研究所'
+                };
+                
+                document.getElementById('office-details-title').textContent = `${officeNames[id]} - 考核详情`;
+                document.getElementById('office-details-modal').classList.remove('hidden');
+            });
+        });
+        
+        // 关闭研究室详情模态框
+        document.getElementById('close-office-details-modal').addEventListener('click', function() {
+            document.getElementById('office-details-modal').classList.add('hidden');
+        });
+        
+        document.getElementById('close-office-details').addEventListener('click', function() {
+            document.getElementById('office-details-modal').classList.add('hidden');
+        });
+        
+        // 下载报告
+        document.getElementById('download-report').addEventListener('click', function() {
+            alert('研究室考核详情报告已下载');
+        });
+
+        // 生成年度报告
+        document.getElementById('generate-report').addEventListener('click', function() {
+            // 显示加载动画
+            this.querySelector('i').classList.add('fa-spin');
+            
+            // 模拟生成报告过程
+            setTimeout(() => {
+                this.querySelector('i').classList.remove('fa-spin');
+                document.getElementById('report-success-modal').classList.remove('hidden');
+            }, 1500);
+        });
+        
+        // 关闭报告成功提示
+        document.getElementById('close-report-success').addEventListener('click', function() {
+            document.getElementById('report-success-modal').classList.add('hidden');
+        });
+        
+        // 下载生成的报告
+        document.getElementById('download-generated-report').addEventListener('click', function() {
+            alert('年度报告已下载');
+            document.getElementById('report-success-modal').classList.add('hidden');
+        });
+
+        // 重新计算积分
+        document.getElementById('calculate-score').addEventListener('click', function() {
+            // 显示加载动画
+            this.querySelector('i').classList.add('fa-spin');
+            
+            // 模拟计算过程
+            setTimeout(() => {
+                this.querySelector('i').classList.remove('fa-spin');
+                alert('科研积分已重新计算完成');
+            }, 2000);
+        });
+
+        // 研究室积分分布图表
+        const officeScoreCtx = document.getElementById('officeScoreChart').getContext('2d');
+        new Chart(officeScoreCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['论文/专著', '发明专利', '项目', '成果鉴定', '标准', '获奖', '人才'],
+                datasets: [{
+                    data: [35, 25, 20, 5, 5, 7, 3],
+                    backgroundColor: [
+                        '#165DFF', '#36CFC9', '#722ED1', 
+                        '#FAAD14', '#52C41A', '#FF4D4F', '#9D2EC5'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

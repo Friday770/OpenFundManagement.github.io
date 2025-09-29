@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>基金管理系统</title>
+  <!-- 引入Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义颜色和字体 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb', // 主色调：蓝色
+            secondary: '#f97316', // 辅助色：橙色
+            neutral: {
+              100: '#f3f4f6',
+              200: '#e5e7eb',
+              300: '#d1d5db',
+              800: '#1f2937',
+              900: '#111827'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .nav-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+      .hover-lift {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      }
+      .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-neutral-800 min-h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-primary text-white shadow-md sticky top-0 z-50 transition-all duration-300">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16 md:h-20">
+        <!-- Logo和名称 -->
+        <div class="flex items-center space-x-2">
+          <div class="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
+            <i class="fa fa-line-chart text-xl"></i>
+          </div>
+          <span class="text-lg md:text-xl font-bold">开放基金与考核评价管理系统</span>
+        </div>
+        
+        <!-- 导航链接 - 桌面版 -->
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="基金.html" target="_blank" rel="noopener noreferrer" class="nav-link relative py-2 font-medium hover:text-secondary transition-colors duration-200">
+            开放基金
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="成果检索与统计.html" target="_blank" rel="noopener noreferrer" class="nav-link relative py-2 font-medium hover:text-secondary transition-colors duration-200">
+            成果检索
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="index.html"  target="_blank" rel="noopener noreferrer" class="nav-link relative py-2 font-medium hover:text-secondary transition-colors duration-200">
+            考核评价
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="系统公共管理.html" target="_blank" rel="noopener noreferrer" class="nav-link relative py-2 font-medium hover:text-secondary transition-colors duration-200">
+            公共管理
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="设备管理.html" target="_blank" rel="noopener noreferrer" class="nav-link relative py-2 font-medium hover:text-secondary transition-colors duration-200">
+            设备管理
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+
+        </nav>
+        
+        <!-- 用户菜单 -->
+        <div class="relative">
+          <button id="userMenuButton" class="flex items-center space-x-2 focus:outline-none group">
+            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center overflow-hidden border-2 border-transparent group-hover:border-secondary transition-all duration-200">
+              <i class="fa fa-user text-lg"></i>
+            </div>
+            <span class="hidden md:inline text-sm font-medium">用户名</span>
+            <i class="fa fa-chevron-down text-xs transition-transform duration-200 group-hover:rotate-180"></i>
+          </button>
+          
+          <!-- 用户下拉菜单 -->
+          <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 hidden transform origin-top-right transition-all duration-200 opacity-0 translate-y-2">
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary hover:text-white transition-colors duration-200">
+              <i class="fa fa-user-circle mr-2"></i>个人资料
+            </a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary hover:text-white transition-colors duration-200">
+              <i class="fa fa-cog mr-2"></i>账户设置
+            </a>
+            <div class="border-t border-gray-100 my-1"></div>
+            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200">
+              <i class="fa fa-sign-out mr-2"></i>退出登录
+            </a>
+          </div>
+        </div>
+        
+        <!-- 移动端菜单按钮 -->
+        <button id="mobileMenuButton" class="md:hidden text-white focus:outline-none">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobileMenu" class="md:hidden bg-primary/95 backdrop-blur-sm hidden">
+      <div class="px-4 py-3 space-y-3">
+        <a href="基金.html" class="block py-2 px-3 rounded-lg hover:bg-white/10 transition-colors duration-200">开放基金</a>
+        <a href="#" class="block py-2 px-3 rounded-lg hover:bg-white/10 transition-colors duration-200">成果检索</a>
+        <a href="#" class="block py-2 px-3 rounded-lg hover:bg-white/10 transition-colors duration-200">考核评价</a>
+        <a href="#" class="block py-2 px-3 rounded-lg hover:bg-white/10 transition-colors duration-200">公共管理</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="flex-grow bg-gray-100">
+    <!-- 页面标题区域 -->
+    <div class="bg-gradient-to-r from-primary to-blue-700 text-white py-12 md:py-20">
+      <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-[clamp(1.75rem,4vw,2.5rem)] font-bold mb-3">科研基金管理系统</h1>
+        <p class="text-blue-100 max-w-2xl text-[clamp(1rem,2vw,1.125rem)]">
+          高效管理科研基金项目，助力科研成果转化与评价，提供全方位的科研管理解决方案
+        </p>
+      </div>
+    </div>
+
+    <!-- 主要内容卡片 -->
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <!-- 开放基金卡片 -->
+        <div class="bg-white rounded-xl shadow-md hover-lift p-6 border border-gray-100">
+          <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4">
+            <i class="fa fa-university text-primary text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">开放基金</h3>
+          <p class="text-gray-600 text-sm mb-4">管理基金申请、审批流程，跟踪资金使用情况，支持项目进度监控</p>
+          <a href="基金.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-primary text-sm font-medium hover:text-blue-700 transition-colors duration-200">
+            进入管理
+            <i class="fa fa-arrow-right ml-2 text-xs"></i>
+          </a>
+        </div>
+        
+        <!-- 成果检索卡片 -->
+        <div class="bg-white rounded-xl shadow-md hover-lift p-6 border border-gray-100">
+          <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center mb-4">
+            <i class="fa fa-search text-green-600 text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">成果检索</h3>
+          <p class="text-gray-600 text-sm mb-4">多维度检索科研成果，支持关键词、时间、领域等多条件筛选</p>
+          <a href="成果检索与统计.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-green-600 text-sm font-medium hover:text-green-800 transition-colors duration-200">
+            开始检索
+            <i class="fa fa-arrow-right ml-2 text-xs"></i>
+          </a>
+        </div>
+        
+        <!-- 考核评价卡片 -->
+        <div class="bg-white rounded-xl shadow-md hover-lift p-6 border border-gray-100">
+          <div class="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4">
+            <i class="fa fa-check-square-o text-purple-600 text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">考核评价</h3>
+          <p class="text-gray-600 text-sm mb-4">建立科学的评价体系，支持在线评审、结果分析与反馈</p>
+          <a href="index.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-purple-600 text-sm font-medium hover:text-purple-800 transition-colors duration-200">
+            查看评价
+            <i class="fa fa-arrow-right ml-2 text-xs"></i>
+          </a>
+        </div>
+        
+        <!-- 公共管理卡片 -->
+        <div class="bg-white rounded-xl shadow-md hover-lift p-6 border border-gray-100">
+          <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center mb-4">
+            <i class="fa fa-cogs text-orange-600 text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">公共管理</h3>
+          <p class="text-gray-600 text-sm mb-4">系统参数配置、用户权限管理、数据备份与恢复等功能</p>
+          <a href="系统公共管理.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-orange-600 text-sm font-medium hover:text-orange-800 transition-colors duration-200">
+            系统设置
+            <i class="fa fa-arrow-right ml-2 text-xs"></i>
+          </a>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md hover-lift p-6 border border-gray-100">
+          <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center mb-4">
+            <i class="fa fa-cubes text-green-600 text-xl"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">设备管理</h3>
+          <p class="text-gray-600 text-sm mb-4">设备信息管理、预约借用、使用统计等功能</p>
+          <a href="设备管理.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-green-600 text-sm font-medium hover:text-green-800 transition-colors duration-200">
+            设备信息
+            <i class="fa fa-arrow-right ml-2 text-xs"></i>
+          </a>
+        </div>
+
+      </div>
+      
+      <!-- 数据统计和图表区域 -->
+      <div class="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+          <h3 class="text-lg font-semibold mb-4">项目资金分布</h3>
+          <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+            <canvas id="fundDistributionChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+          <h3 class="text-lg font-semibold mb-4">项目状态统计</h3>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm font-medium text-gray-700">进行中</span>
+                <span class="text-sm font-medium text-green-600">65%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-green-600 h-2.5 rounded-full" style="width: 65%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm font-medium text-gray-700">已完成</span>
+                <span class="text-sm font-medium text-blue-600">25%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 25%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm font-medium text-gray-700">延期</span>
+                <span class="text-sm font-medium text-yellow-600">8%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-yellow-600 h-2.5 rounded-full" style="width: 8%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm font-medium text-gray-700">终止</span>
+                <span class="text-sm font-medium text-red-600">2%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-red-600 h-2.5 rounded-full" style="width: 2%"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 pt-6 border-t border-gray-100">
+            <h4 class="text-base font-medium mb-3">最新通知</h4>
+            <div class="space-y-3">
+              <a href="#" class="block text-sm text-gray-700 hover:text-primary transition-colors duration-200">
+                <div class="flex items-start">
+                  <span class="inline-block w-2 h-2 rounded-full bg-red-500 mt-1.5 mr-2"></span>
+                  <span>关于2023年度开放基金申报的通知</span>
+                </div>
+              </a>
+              <a href="#" class="block text-sm text-gray-700 hover:text-primary transition-colors duration-200">
+                <div class="flex items-start">
+                  <span class="inline-block w-2 h-2 rounded-full bg-red-500 mt-1.5 mr-2"></span>
+                  <span>科研成果评价标准更新说明</span>
+                </div>
+              </a>
+              <a href="#" class="block text-sm text-gray-700 hover:text-primary transition-colors duration-200">
+                <div class="flex items-start">
+                  <span class="inline-block w-2 h-2 rounded-full bg-gray-300 mt-1.5 mr-2"></span>
+                  <span>系统将于5月1日进行维护升级</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-neutral-800 text-white py-10">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+              <i class="fa fa-line-chart"></i>
+            </div>
+            <span class="font-bold">开放基金与考核评价管理系统</span>
+          </div>
+          <p class="text-gray-400 text-sm">
+            为科研机构提供全方位的基金管理、成果评价解决方案，助力科研创新发展。
+          </p>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">快速链接</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-secondary transition-colors duration-200">开放基金</a></li>
+            <li><a href="#" class="hover:text-secondary transition-colors duration-200">成果检索</a></li>
+            <li><a href="#" class="hover:text-secondary transition-colors duration-200">考核评价</a></li>
+            <li><a href="#" class="hover:text-secondary transition-colors duration-200">公共管理</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">帮助中心</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-secondary transition-colors duration-200">使用指南</a></li>
+            <li><a href="#" class="hover:text-secondary transition-colors duration-200">常见问题</a></li>
+            <li><a href="#" class="hover:text-secondary transition-colors duration-200">联系我们</a></li>
+            <li><a href="#" class="hover:text-secondary transition-colors duration-200">意见反馈</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">联系我们</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li class="flex items-center">
+              <i class="fa fa-envelope-o mr-2 text-secondary"></i>
+              <span>support@research.org</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fa fa-phone mr-2 text-secondary"></i>
+              <span>400-123-4567</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fa fa-map-marker mr-2 text-secondary"></i>
+              <span>北京市海淀区科研大厦</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+        <p>© 2023 科研管理平台 版权所有 | 京ICP备12345678号</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 引入Chart.js用于图表展示 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- 页面交互脚本 -->
+  <script>
+    // 用户菜单交互
+    const userMenuButton = document.getElementById('userMenuButton');
+    const userMenu = document.getElementById('userMenu');
+    
+    userMenuButton.addEventListener('click', () => {
+      userMenu.classList.toggle('hidden');
+      // 添加动画效果
+      setTimeout(() => {
+        userMenu.classList.toggle('opacity-0');
+        userMenu.classList.toggle('translate-y-2');
+      }, 10);
+    });
+
+
+  //   const banner = document.getElementById('banner');
+  // const content = document.getElementById('bannerContent');
+
+  // banner.addEventListener('mousemove', (e) => {
+  //   const { offsetWidth: w, offsetHeight: h } = banner;
+  //   const x = (e.offsetX - w / 2) / 30; // 控制偏移大小，数值越小越轻微
+  //   const y = (e.offsetY - h / 2) / 30;
+
+  //   content.style.transform = `translate(${x}px, ${y}px)`;
+  // });
+
+  // banner.addEventListener('mouseleave', () => {
+  //   content.style.transform = 'translate(0, 0)';
+  // });
+    
+    // 点击其他区域关闭用户菜单
+    document.addEventListener('click', (e) => {
+      if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+        if (!userMenu.classList.contains('hidden')) {
+          userMenu.classList.add('opacity-0', 'translate-y-2');
+          setTimeout(() => {
+            userMenu.classList.add('hidden');
+          }, 200);
+        }
+      }
+    });
+    
+    // 移动端菜单交互
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // 导航栏滚动效果
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 10) {
+        header.classList.add('nav-shadow');
+        header.classList.add('bg-primary/95');
+        header.classList.add('backdrop-blur-sm');
+      } else {
+        header.classList.remove('nav-shadow');
+        header.classList.remove('bg-primary/95');
+        header.classList.remove('backdrop-blur-sm');
+      }
+    });
+    
+    // 初始化图表
+    document.addEventListener('DOMContentLoaded', () => {
+      const ctx = document.getElementById('fundDistributionChart').getContext('2d');
+      
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['基础研究', '应用研究', '试验发展', '其他'],
+          datasets: [{
+            data: [35, 45, 15, 5],
+            backgroundColor: [
+              '#3b82f6', // 蓝色
+              '#10b981', // 绿色
+              '#f59e0b', // 黄色
+              '#6b7280'  // 灰色
+            ],
+            borderWidth: 0,
+            hoverOffset: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                boxWidth: 12
+              }
+            }
+          },
+          cutout: '65%',
+          animation: {
+            animateScale: true,
+            animateRotate: true
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

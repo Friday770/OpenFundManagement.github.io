@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成果类型管理 - 科研考核评价管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36CFC9',
+                        accent: '#722ED1',
+                        neutral: '#F2F3F5',
+                        'neutral-dark': '#4E5969',
+                        success: '#52C41A',
+                        warning: '#FAAD14',
+                        danger: '#FF4D4F',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+            .nav-active {
+                @apply bg-primary/10 text-primary border-l-4 border-primary;
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 min-h-screen flex flex-col">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="w-full mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- 左侧Logo和标题 -->
+                <div class="flex items-center space-x-3">
+                    <a href="首页.html">
+                        <i class="fa fa-flask text-primary text-2xl"></i>
+                    </a>
+                    <a href="首页.html">
+                        <h1 class="text-xl font-bold text-gray-800">考核评价管理</h1>
+                    </a>
+                </div>
+                
+                <!-- 右侧用户信息和退出 -->
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 hover:text-primary transition-all-300">
+                        <i class="fa fa-bell-o text-lg"></i>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <img src="https://picsum.photos/id/1005/40/40" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                        <span class="hidden md:inline text-sm font-medium">张教授</span>
+                        <i class="fa fa-angle-down text-gray-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- 侧边导航 -->
+        <aside class="w-64 bg-white shadow-sm border-r border-gray-200 flex-shrink-0 hidden md:block">
+            <nav class="py-4 h-full flex flex-col">
+                <div class="px-4 mb-4">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">主菜单</p>
+                </div>
+                <ul class="space-y-1 px-2">
+                    <li>
+                        <a href="index.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-home w-5 h-5 mr-3"></i>
+                            首页
+                        </a>
+                    </li>
+                    <li>
+                        <a href="成果类型管理.html" class="nav-active flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                            <i class="fa fa-th-list w-5 h-5 mr-3"></i>
+                            成果类型管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="成果录入.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-pencil w-5 h-5 mr-3"></i>
+                            成果录入
+                        </a>
+                    </li>
+                    <li>
+                        <a href="批量导入.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-upload w-5 h-5 mr-3"></i>
+                            批量导入
+                        </a>
+                    </li>
+                    <li>
+                        <a href="成果审核.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-check-square-o w-5 h-5 mr-3"></i>
+                            成果审核
+                        </a>
+                    </li>
+                    <li>
+                        <a href="审核记录.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-history w-5 h-5 mr-3"></i>
+                            审核记录
+                        </a>
+                    </li>
+                    <li>
+                        <a href="成果统计.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-bar-chart w-5 h-5 mr-3"></i>
+                            成果统计
+                        </a>
+                    </li>
+                    <li>
+                        <a href="绩效评价.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                            <i class="fa fa-trophy w-5 h-5 mr-3"></i>
+                            绩效评价
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-auto px-4 py-4 border-t border-gray-200">
+                    <div class="bg-primary/5 rounded-lg p-3">
+                        <p class="text-xs text-gray-600 mb-2">系统提示</p>
+                        <p class="text-sm text-primary">下一次绩效考核截止日期：2023-12-31</p>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- 移动端菜单按钮 -->
+        <div class="md:hidden fixed bottom-4 right-4 z-40">
+            <button id="mobile-menu-button" class="bg-primary text-white rounded-full w-12 h-12 shadow-lg flex items-center justify-center">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- 移动端侧边栏 -->
+        <div id="mobile-sidebar" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden md:hidden">
+            <div class="bg-white h-full w-64 shadow-xl transform transition-transform">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h2 class="font-bold">菜单导航</h2>
+                    <button id="close-menu" class="text-gray-500">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <nav class="py-4">
+                    <ul class="space-y-1 px-2">
+                        <li>
+                            <a href="index.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-home w-5 h-5 mr-3"></i>
+                                首页
+                            </a>
+                        </li>
+                        <li>
+                            <a href="成果类型管理.html" class="nav-active flex items-center px-3 py-2 text-sm font-medium rounded-md">
+                                <i class="fa fa-th-list w-5 h-5 mr-3"></i>
+                                成果类型管理
+                            </a>
+                        </li>
+                        <li>
+                            <a href="成果录入.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-pencil w-5 h-5 mr-3"></i>
+                                成果录入
+                            </a>
+                        </li>
+                        <li>
+                            <a href="批量导入.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-upload w-5 h-5 mr-3"></i>
+                                批量导入
+                            </a>
+                        </li>
+                        <li>
+                            <a href="成果审核.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-check-square-o w-5 h-5 mr-3"></i>
+                                成果审核
+                            </a>
+                        </li>
+                        <li>
+                            <a href="审核记录.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-history w-5 h-5 mr-3"></i>
+                                审核记录
+                            </a>
+                        </li>
+                        <li>
+                            <a href="成果统计.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-bar-chart w-5 h-5 mr-3"></i>
+                                成果统计
+                            </a>
+                        </li>
+                        <li>
+                            <a href="绩效评价.html" class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-all-300">
+                                <i class="fa fa-trophy w-5 h-5 mr-3"></i>
+                                绩效评价
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- 页面内容 -->
+        <main class="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6">
+            <div class="container mx-auto">
+                <!-- 页面标题和操作按钮 -->
+                <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-gray-800">成果类型管理</h2>
+                        <p class="text-gray-500 mt-1">管理科研成果的分类和属性设置</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0">
+                        <button id="add-type-btn" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center transition-all-300">
+                            <i class="fa fa-plus mr-2"></i> 添加成果类型
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 成果类型列表 -->
+                <div class="bg-white rounded-lg card-shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        类型名称
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        代码
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        状态
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        成果数量
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        最后更新
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- 论文/专著 -->
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                                                <i class="fa fa-book"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">论文/专著</div>
+                                                <div class="text-xs text-gray-500">包括期刊论文、会议论文和专著</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">PAPER</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            启用
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">876</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-09-15
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3 edit-type" data-id="1">
+                                            <i class="fa fa-pencil"></i> 编辑
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 view-fields" data-id="1">
+                                            <i class="fa fa-list-ul"></i> 字段
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- 发明专利 -->
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mr-3">
+                                                <i class="fa fa-lightbulb-o"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">发明专利</div>
+                                                <div class="text-xs text-gray-500">包括发明、实用新型和外观设计专利</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">PATENT</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            启用
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">524</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-08-22
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3 edit-type" data-id="2">
+                                            <i class="fa fa-pencil"></i> 编辑
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 view-fields" data-id="2">
+                                            <i class="fa fa-list-ul"></i> 字段
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- 项目 -->
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent mr-3">
+                                                <i class="fa fa-tasks"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">项目</div>
+                                                <div class="text-xs text-gray-500">包括各类科研项目和课题</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">PROJECT</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            启用
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">432</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-09-01
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3 edit-type" data-id="3">
+                                            <i class="fa fa-pencil"></i> 编辑
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 view-fields" data-id="3">
+                                            <i class="fa fa-list-ul"></i> 字段
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- 成果鉴定 -->
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-warning/10 flex items-center justify-center text-warning mr-3">
+                                                <i class="fa fa-certificate"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">成果鉴定</div>
+                                                <div class="text-xs text-gray-500">各类科研成果的鉴定证明</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">IDENTIFICATION</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            启用
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">215</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-07-18
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3 edit-type" data-id="4">
+                                            <i class="fa fa-pencil"></i> 编辑
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 view-fields" data-id="4">
+                                            <i class="fa fa-list-ul"></i> 字段
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- 标准 -->
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success mr-3">
+                                                <i class="fa fa-check-square"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">标准</div>
+                                                <div class="text-xs text-gray-500">包括国际、国家、行业和地方标准</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">STANDARD</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            启用
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">187</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-09-10
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3 edit-type" data-id="5">
+                                            <i class="fa fa-pencil"></i> 编辑
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 view-fields" data-id="5">
+                                            <i class="fa fa-list-ul"></i> 字段
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- 获奖 -->
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-danger/10 flex items-center justify-center text-danger mr-3">
+                                                <i class="fa fa-trophy"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">获奖</div>
+                                                <div class="text-xs text-gray-500">各类科研奖励和荣誉</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">AWARD</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            启用
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">156</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-08-05
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3 edit-type" data-id="6">
+                                            <i class="fa fa-pencil"></i> 编辑
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 view-fields" data-id="6">
+                                            <i class="fa fa-list-ul"></i> 字段
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- 人才 -->
+                                <tr class="hover:bg-gray-50 transition-all-300">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-3">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">人才</div>
+                                                <div class="text-xs text-gray-500">各类人才计划和称号</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">TALENT</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success/10 text-success">
+                                            启用
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">68</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-09-20
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3 edit-type" data-id="7">
+                                            <i class="fa fa-pencil"></i> 编辑
+                                        </button>
+                                        <button class="text-gray-500 hover:text-gray-700 view-fields" data-id="7">
+                                            <i class="fa fa-list-ul"></i> 字段
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 添加/编辑成果类型模态框 -->
+    <div id="type-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg w-full max-w-md card-shadow transform transition-all">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 id="modal-title" class="text-lg font-medium text-gray-900">添加成果类型</h3>
+                <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="px-6 py-4">
+                <form id="type-form">
+                    <input type="hidden" id="type-id">
+                    <div class="mb-4">
+                        <label for="type-name" class="block text-sm font-medium text-gray-700 mb-1">类型名称 <span class="text-danger">*</span></label>
+                        <input type="text" id="type-name" name="type-name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="例如：论文/专著">
+                    </div>
+                    <div class="mb-4">
+                        <label for="type-code" class="block text-sm font-medium text-gray-700 mb-1">类型代码 <span class="text-danger">*</span></label>
+                        <input type="text" id="type-code" name="type-code" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="例如：PAPER" uppercase>
+                    </div>
+                    <div class="mb-4">
+                        <label for="type-description" class="block text-sm font-medium text-gray-700 mb-1">类型描述</label>
+                        <textarea id="type-description" name="type-description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="简要描述该成果类型包含的内容"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="type-status" value="1" checked class="form-radio text-primary focus:ring-primary">
+                                <span class="ml-2 text-sm text-gray-700">启用</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="type-status" value="0" class="form-radio text-primary focus:ring-primary">
+                                <span class="ml-2 text-sm text-gray-700">禁用</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
+                <button id="cancel-modal" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all-300">取消</button>
+                <button id="save-type" class="px-4 py-2 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary/90 transition-all-300">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 字段管理模态框 -->
+    <div id="fields-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg w-full max-w-2xl card-shadow transform transition-all max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 id="fields-modal-title" class="text-lg font-medium text-gray-900">论文/专著 字段管理</h3>
+                <button id="close-fields-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="px-6 py-4 overflow-y-auto flex-1">
+                <div class="mb-4 flex justify-between items-center">
+                    <p class="text-sm text-gray-600">管理该类型成果需要填写的字段</p>
+                    <button id="add-field-btn" class="text-primary hover:text-primary/80 text-sm flex items-center">
+                        <i class="fa fa-plus mr-1"></i> 添加字段
+                    </button>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="p-3 border border-gray-200 rounded-md flex items-center justify-between hover:border-primary/50 transition-all-300">
+                        <div>
+                            <div class="font-medium text-gray-900">题目</div>
+                            <div class="text-xs text-gray-500">文本框 · 必填</div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-500 hover:text-primary p-1">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="text-gray-500 hover:text-danger p-1" disabled>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border border-gray-200 rounded-md flex items-center justify-between hover:border-primary/50 transition-all-300">
+                        <div>
+                            <div class="font-medium text-gray-900">发表时间</div>
+                            <div class="text-xs text-gray-500">日期选择器 · 必填</div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-500 hover:text-primary p-1">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="text-gray-500 hover:text-danger p-1" disabled>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border border-gray-200 rounded-md flex items-center justify-between hover:border-primary/50 transition-all-300">
+                        <div>
+                            <div class="font-medium text-gray-900">期刊/会议名称</div>
+                            <div class="text-xs text-gray-500">文本框 · 必填</div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-500 hover:text-primary p-1">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="text-gray-500 hover:text-danger p-1" disabled>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border border-gray-200 rounded-md flex items-center justify-between hover:border-primary/50 transition-all-300">
+                        <div>
+                            <div class="font-medium text-gray-900">级别</div>
+                            <div class="text-xs text-gray-500">下拉选择 · 必填</div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-500 hover:text-primary p-1">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="text-gray-500 hover:text-danger p-1" disabled>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border border-gray-200 rounded-md flex items-center justify-between hover:border-primary/50 transition-all-300">
+                        <div>
+                            <div class="font-medium text-gray-900">作者</div>
+                            <div class="text-xs text-gray-500">文本框 · 必填</div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-500 hover:text-primary p-1">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="text-gray-500 hover:text-danger p-1" disabled>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border border-gray-200 rounded-md flex items-center justify-between hover:border-primary/50 transition-all-300">
+                        <div>
+                            <div class="font-medium text-gray-900">DOI</div>
+                            <div class="text-xs text-gray-500">文本框 · 可选</div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-500 hover:text-primary p-1">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="text-gray-500 hover:text-danger p-1">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
+                <button id="cancel-fields-modal" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all-300">取消</button>
+                <button id="save-fields" class="px-4 py-2 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary/90 transition-all-300">保存设置</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 移动端菜单控制
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-sidebar').classList.remove('hidden');
+        });
+        
+        document.getElementById('close-menu').addEventListener('click', function() {
+            document.getElementById('mobile-sidebar').classList.add('hidden');
+        });
+        
+        // 点击侧边栏外部关闭菜单
+        document.getElementById('mobile-sidebar').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+
+        // 模态框控制
+        const typeModal = document.getElementById('type-modal');
+        const fieldsModal = document.getElementById('fields-modal');
+        
+        // 打开添加类型模态框
+        document.getElementById('add-type-btn').addEventListener('click', function() {
+            document.getElementById('modal-title').textContent = '添加成果类型';
+            document.getElementById('type-form').reset();
+            document.getElementById('type-id').value = '';
+            typeModal.classList.remove('hidden');
+        });
+        
+        // 打开编辑类型模态框
+        document.querySelectorAll('.edit-type').forEach(button => {
+            button.addEventListener('click', function() {
+                const typeId = this.getAttribute('data-id');
+                // 这里应该根据ID加载数据，这里仅做演示
+                document.getElementById('modal-title').textContent = '编辑成果类型';
+                document.getElementById('type-id').value = typeId;
+                
+                // 模拟数据加载
+                const types = {
+                    '1': {name: '论文/专著', code: 'PAPER', description: '包括期刊论文、会议论文和专著'},
+                    '2': {name: '发明专利', code: 'PATENT', description: '包括发明、实用新型和外观设计专利'},
+                    '3': {name: '项目', code: 'PROJECT', description: '包括各类科研项目和课题'},
+                    '4': {name: '成果鉴定', code: 'IDENTIFICATION', description: '各类科研成果的鉴定证明'},
+                    '5': {name: '标准', code: 'STANDARD', description: '包括国际、国家、行业和地方标准'},
+                    '6': {name: '获奖', code: 'AWARD', description: '各类科研奖励和荣誉'},
+                    '7': {name: '人才', code: 'TALENT', description: '各类人才计划和称号'}
+                };
+                
+                if (types[typeId]) {
+                    document.getElementById('type-name').value = types[typeId].name;
+                    document.getElementById('type-code').value = types[typeId].code;
+                    document.getElementById('type-description').value = types[typeId].description;
+                }
+                
+                typeModal.classList.remove('hidden');
+            });
+        });
+        
+        // 关闭类型模态框
+        document.getElementById('close-modal').addEventListener('click', function() {
+            typeModal.classList.add('hidden');
+        });
+        
+        document.getElementById('cancel-modal').addEventListener('click', function() {
+            typeModal.classList.add('hidden');
+        });
+        
+        // 保存类型
+        document.getElementById('save-type').addEventListener('click', function() {
+            // 这里应该有表单验证和保存逻辑
+            alert('保存成功！');
+            typeModal.classList.add('hidden');
+        });
+        
+        // 打开字段管理模态框
+        document.querySelectorAll('.view-fields').forEach(button => {
+            button.addEventListener('click', function() {
+                const typeId = this.getAttribute('data-id');
+                // 根据类型ID更新标题
+                const typeNames = {
+                    '1': '论文/专著',
+                    '2': '发明专利',
+                    '3': '项目',
+                    '4': '成果鉴定',
+                    '5': '标准',
+                    '6': '获奖',
+                    '7': '人才'
+                };
+                
+                document.getElementById('fields-modal-title').textContent = `${typeNames[typeId]} 字段管理`;
+                fieldsModal.classList.remove('hidden');
+            });
+        });
+        
+        // 关闭字段管理模态框
+        document.getElementById('close-fields-modal').addEventListener('click', function() {
+            fieldsModal.classList.add('hidden');
+        });
+        
+        document.getElementById('cancel-fields-modal').addEventListener('click', function() {
+            fieldsModal.classList.add('hidden');
+        });
+        
+        // 保存字段设置
+        document.getElementById('save-fields').addEventListener('click', function() {
+            alert('字段设置已保存！');
+            fieldsModal.classList.add('hidden');
+        });
+        
+        // 添加字段按钮
+        document.getElementById('add-field-btn').addEventListener('click', function() {
+            alert('添加新字段功能将在这里实现');
+        });
+    </script>
+</body>
+</html>

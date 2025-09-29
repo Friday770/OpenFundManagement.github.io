@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>系统公共管理</title>
+  <!-- 引入Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义颜色和字体 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CFC9',
+            accent: '#722ED1',
+            neutral: '#1F2937',
+            'neutral-light': '#F5F7FA',
+            success: '#52C41A',
+            warning: '#FAAD14',
+            danger: '#FF4D4F',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .sidebar-item {
+        @apply flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer;
+      }
+      .sidebar-item.active {
+        @apply bg-primary/10 text-primary font-medium border-l-4 border-primary;
+      }
+      .sidebar-item:hover:not(.active) {
+        @apply bg-gray-100;
+      }
+      .card {
+        @apply bg-white rounded-xl shadow-sm border border-gray-100 p-5 transition-all duration-300 hover:shadow-md;
+      }
+      .btn {
+        @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2;
+      }
+      .btn-primary {
+        @apply bg-primary text-white hover:bg-primary/90;
+      }
+      .btn-outline {
+        @apply border border-gray-300 hover:bg-gray-50;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-neutral min-h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+    <div class="w-full mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- 左侧Logo和标题 -->
+        <div class="flex items-center gap-3">
+            <a href="首页.html">
+              <i class="fa fa-cogs text-primary text-2xl"></i>
+            </a>
+          <div>
+            <a href="首页.html">
+              <h1 class="text-lg font-semibold">系统公共管理</h1>
+            </a>
+          </div>
+        </div>
+        
+        <!-- 右侧用户信息和操作 -->
+        <div class="flex items-center gap-5">
+          <!-- 通知图标 -->
+          <div class="relative cursor-pointer text-gray-500 hover:text-primary transition-colors">
+            <i class="fa fa-bell text-lg"></i>
+            <span class="absolute -top-1 -right-1 bg-danger text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">3</span>
+          </div>
+          
+          <!-- 用户信息 -->
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-user"></i>
+            </div>
+            <div class="hidden md:block">
+              <p class="text-sm font-medium">管理员</p>
+              <p class="text-xs text-gray-500">系统管理员</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="flex-1 flex">
+    <!-- 侧边栏导航 -->
+    <aside class="w-64 bg-white border-r border-gray-200 h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto transition-all duration-300 z-20" id="sidebar">
+      <div class="p-4">
+        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">系统公共管理</h2>
+        
+        <nav class="space-y-1">
+          <div class="sidebar-item active" data-target="dashboard">
+            <i class="fa fa-tachometer w-5 text-center"></i>
+            <span>总览</span>
+          </div>
+          
+          <div class="sidebar-item" data-target="weight-config">
+            <i class="fa fa-balance-scale w-5 text-center"></i>
+            <span>权重指标配置</span>
+          </div>
+          
+          <div class="sidebar-item" data-target="user-permission">
+            <i class="fa fa-users w-5 text-center"></i>
+            <span>用户与权限管理</span>
+          </div>
+          
+          <div class="sidebar-item" data-target="notifications">
+            <i class="fa fa-envelope w-5 text-center"></i>
+            <span>消息通知</span>
+          </div>
+          
+          <div class="sidebar-item" data-target="audit-logs">
+            <i class="fa fa-history w-5 text-center"></i>
+            <span>审计与日志</span>
+          </div>
+          
+          <div class="sidebar-item" data-target="data-interface">
+            <i class="fa fa-plug w-5 text-center"></i>
+            <span>数据接口服务</span>
+          </div>
+          
+          <div class="sidebar-item" data-target="reports">
+            <i class="fa fa-file-excel-o w-5 text-center"></i>
+            <span>统计报表导出</span>
+          </div>
+          
+          <div class="sidebar-item" data-target="fund-management">
+            <i class="fa fa-money w-5 text-center"></i>
+            <span>评审经费管理</span>
+          </div>
+        </nav>
+      </div>
+    </aside>
+    
+    <!-- 内容区域 -->
+    <div class="flex-1 p-6 overflow-y-auto" id="content-area">
+      <!-- 总览页面 -->
+      <div class="page" id="dashboard">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">系统公共管理总览</h2>
+          <button class="btn btn-primary">
+            <i class="fa fa-cog"></i>
+            <span>系统设置</span>
+          </button>
+        </div>
+        
+        <!-- 模块卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div class="card" data-target="weight-config">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg font-semibold mb-1">权重指标配置</h3>
+                <p class="text-gray-500 text-sm">管理研究室评价指标及权重设置</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <i class="fa fa-balance-scale"></i>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">指标总数</span>
+                <span class="font-medium">9项</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card" data-target="user-permission">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg font-semibold mb-1">用户与权限管理</h3>
+                <p class="text-gray-500 text-sm">管理系统用户、角色及权限分配</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+                <i class="fa fa-users"></i>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">活跃用户</span>
+                <span class="font-medium">128人</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card" data-target="notifications">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg font-semibold mb-1">消息通知</h3>
+                <p class="text-gray-500 text-sm">管理系统消息及通知设置</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+                <i class="fa fa-envelope"></i>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">未读消息</span>
+                <span class="font-medium text-danger">3条</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card" data-target="audit-logs">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg font-semibold mb-1">审计与日志</h3>
+                <p class="text-gray-500 text-sm">查看系统操作日志及安全审计</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center text-warning">
+                <i class="fa fa-history"></i>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">今日操作</span>
+                <span class="font-medium">42次</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card" data-target="data-interface">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg font-semibold mb-1">数据接口服务</h3>
+                <p class="text-gray-500 text-sm">管理系统数据接口及API设置</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center text-success">
+                <i class="fa fa-plug"></i>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">活跃接口</span>
+                <span class="font-medium">12个</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card" data-target="reports">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg font-semibold mb-1">统计报表导出</h3>
+                <p class="text-gray-500 text-sm">生成并导出各类统计报表</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-danger/10 flex items-center justify-center text-danger">
+                <i class="fa fa-file-excel-o"></i>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">本月导出</span>
+                <span class="font-medium">28次</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card lg:col-span-1" data-target="fund-management">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="text-lg font-semibold mb-1">评审经费管理</h3>
+                <p class="text-gray-500 text-sm">管理各类评审活动的经费</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <i class="fa fa-money"></i>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500">年度预算</span>
+                <span class="font-medium">¥500,000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 系统状态 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="card lg:col-span-2">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-semibold text-lg">最近系统活动</h3>
+              <button class="text-primary text-sm">查看全部</button>
+            </div>
+            
+            <div class="space-y-4">
+              <div class="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                <div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center text-success flex-shrink-0">
+                  <i class="fa fa-user-plus"></i>
+                </div>
+                <div>
+                  <p class="text-sm"><span class="font-medium">张三</span> 创建了新用户 <span class="text-primary">李四</span></p>
+                  <p class="text-xs text-gray-500 mt-1">10分钟前</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                  <i class="fa fa-cog"></i>
+                </div>
+                <div>
+                  <p class="text-sm"><span class="font-medium">管理员</span> 更新了论文指标权重配置</p>
+                  <p class="text-xs text-gray-500 mt-1">1小时前</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                <div class="w-8 h-8 rounded-full bg-warning/10 flex items-center justify-center text-warning flex-shrink-0">
+                  <i class="fa fa-download"></i>
+                </div>
+                <div>
+                  <p class="text-sm"><span class="font-medium">王五</span> 导出了2023年度科研统计报表</p>
+                  <p class="text-xs text-gray-500 mt-1">3小时前</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                <div class="w-8 h-8 rounded-full bg-danger/10 flex items-center justify-center text-danger flex-shrink-0">
+                  <i class="fa fa-exclamation-triangle"></i>
+                </div>
+                <div>
+                  <p class="text-sm">检测到异常登录尝试，已自动阻止</p>
+                  <p class="text-xs text-gray-500 mt-1">5小时前</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-semibold text-lg">系统状态</h3>
+              <span class="text-success text-sm flex items-center gap-1">
+                <i class="fa fa-circle text-xs"></i> 运行中
+              </span>
+            </div>
+            
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-gray-500">系统版本</span>
+                  <span class="font-medium">v2.3.1</span>
+                </div>
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-gray-500">上次更新</span>
+                  <span class="font-medium">2023-05-15</span>
+                </div>
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-gray-500">在线用户</span>
+                  <span class="font-medium">24人</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-500">存储空间</span>
+                  <span class="font-medium">68% 已使用</span>
+                </div>
+              </div>
+              
+              <div class="pt-3 border-t border-gray-100">
+                <h4 class="text-sm font-medium mb-2">存储空间使用</h4>
+                <div class="w-full bg-gray-100 rounded-full h-2">
+                  <div class="bg-primary h-2 rounded-full" style="width: 68%"></div>
+                </div>
+              </div>
+              
+              <button class="btn btn-outline w-full mt-2">
+                <i class="fa fa-refresh"></i>
+                <span>检查更新</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 权重指标配置页面 -->
+      <div class="page hidden" id="weight-config">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">权重指标配置</h2>
+          <div class="flex gap-3">
+            <button class="btn btn-outline">
+              <i class="fa fa-download"></i>
+              <span>导出配置</span>
+            </button>
+            <button class="btn btn-primary">
+              <i class="fa fa-save"></i>
+              <span>保存配置</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 研究室指标任务设定 -->
+        <div class="card mb-6">
+          <h3 class="text-lg font-semibold mb-4">研究室指标任务设定</h3>
+          <p class="text-sm text-gray-500 mb-5">管理员设置建设期最低考核指标，研究室设置自设指标</p>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">序号</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">类型</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">数量</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">级别</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">1</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">论文</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">不少于3篇（第一作者或通讯作者）</td>
+                  <td class="px-4 py-3 text-sm">SCI一、二区、EI、领域T1类期刊或国际会议优秀论文</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">专利</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">不少于6项（其中授权不少于3项）</td>
+                  <td class="px-4 py-3 text-sm">发明专利</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">3</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">项目</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">至少1项（课题负责人）</td>
+                  <td class="px-4 py-3 text-sm">国家重大项目、重点研发计划、国家自然科学基金、省级重点研发计划、企业自主创新研究经费额度千万以上项目</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">4</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">成果</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">至少2项</td>
+                  <td class="px-4 py-3 text-sm">国际先进水平及以上</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">5</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">标准</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">至少2项</td>
+                  <td class="px-4 py-3 text-sm">主导承担国际/国家/行业/团体标准</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">6</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">获奖</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">至少1项</td>
+                  <td class="px-4 py-3 text-sm">省部级以上科技一等奖（前3名）</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">7</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">人才</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">至少1人</td>
+                  <td class="px-4 py-3 text-sm">省级以上</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <button class="mt-4 text-primary text-sm flex items-center gap-1">
+            <i class="fa fa-plus-circle"></i> 添加新指标类型
+          </button>
+        </div>
+        
+        <!-- 评价指标体系设置 -->
+        <div class="card">
+          <h3 class="text-lg font-semibold mb-4">评价指标体系设置</h3>
+          
+          <div class="space-y-6">
+            <!-- 论文指标 -->
+            <div class="border border-gray-200 rounded-lg overflow-hidden">
+              <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                <h4 class="font-medium">1. 论文</h4>
+                <div class="flex items-center gap-3">
+                  <div class="text-sm">
+                    <span class="text-gray-500">权重：</span>
+                    <input type="number" value="0.2" step="0.01" min="0" max="1" class="w-16 px-2 py-1 border border-gray-300 rounded text-center">
+                  </div>
+                  <button class="text-primary hover:text-primary/80">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="p-4">
+                <p class="text-sm mb-3"><span class="text-gray-500">满分：</span>10分</p>
+                
+                <div class="space-y-2">
+                  <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                    <span class="text-sm">顶级论文</span>
+                    <div class="flex items-center gap-4">
+                      <span class="text-sm">1篇 = 5分</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                    <span class="text-sm">SCI一区</span>
+                    <div class="flex items-center gap-4">
+                      <span class="text-sm">1篇 = 1分</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                    <span class="text-sm">SCI二区</span>
+                    <div class="flex items-center gap-4">
+                      <span class="text-sm">1篇 = 0.5分</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                    <span class="text-sm">T1类EI</span>
+                    <div class="flex items-center gap-4">
+                      <span class="text-sm">1篇 = 1分</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                    <span class="text-sm">核心期刊</span>
+                    <div class="flex items-center gap-4">
+                      <span class="text-sm">1篇 = 0.2分</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 发明专利指标 -->
+            <div class="border border-gray-200 rounded-lg overflow-hidden">
+              <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                <h4 class="font-medium">2. 发明专利</h4>
+                <div class="flex items-center gap-3">
+                  <div class="text-sm">
+                    <span class="text-gray-500">权重：</span>
+                    <input type="number" value="0.15" step="0.01" min="0" max="1" class="w-16 px-2 py-1 border border-gray-300 rounded text-center">
+                  </div>
+                  <button class="text-primary hover:text-primary/80">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="p-4">
+                <p class="text-sm mb-3"><span class="text-gray-500">满分：</span>10分</p>
+                
+                <div class="space-y-2">
+                  <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                    <span class="text-sm">国内发明专利</span>
+                    <div class="flex items-center gap-4">
+                      <span class="text-sm">1项 = 0.5分</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                    <span class="text-sm">国际专利</span>
+                    <div class="flex items-center gap-4">
+                      <span class="text-sm">1项 = 0.6分</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 更多指标（仅显示部分作为示例） -->
+            <div class="border border-gray-200 rounded-lg overflow-hidden">
+              <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                <h4 class="font-medium">3. 标准</h4>
+                <div class="flex items-center gap-3">
+                  <div class="text-sm">
+                    <span class="text-gray-500">权重：</span>
+                    <input type="number" value="0.15" step="0.01" min="0" max="1" class="w-16 px-2 py-1 border border-gray-300 rounded text-center">
+                  </div>
+                  <button class="text-primary hover:text-primary/80">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="p-4">
+                <p class="text-sm mb-3"><span class="text-gray-500">满分：</span>10分</p>
+                <p class="text-sm text-gray-500 mb-3">非第一完成单位，则按二、三、四、五依次乘以0.5,0.4，0.3,0.2,0.1</p>
+                
+                <div class="space-y-2">
+                  <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                    <span class="text-sm">国际标准</span>
+                    <div class="flex items-center gap-4">
+                      <span class="text-sm">1项 = 5分</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                    <span class="text-sm">国家标准</span>
+                    <div class="flex items-center gap-4">
+                      <span class="text-sm">1项 = 3分</span>
+                    </div>
+                  </div>
+                  <!-- 其他标准类型省略 -->
+                </div>
+              </div>
+            </div>
+            
+            <button class="w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors text-sm">
+              <i class="fa fa-plus mr-1"></i> 查看更多指标
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 用户与权限管理页面 -->
+      <div class="page hidden" id="user-permission">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">用户与权限管理</h2>
+          <div class="flex gap-3">
+            <div class="relative">
+              <input type="text" placeholder="搜索用户或角色..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+              <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="btn btn-primary">
+              <i class="fa fa-plus"></i>
+              <span>新增用户</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 角色管理 -->
+        <div class="card mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">角色管理</h3>
+            <button class="text-primary text-sm flex items-center gap-1">
+              <i class="fa fa-plus-circle"></i> 新增角色
+            </button>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+              <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium">系统超管</h4>
+                <div class="flex gap-1">
+                  <button class="text-gray-400 hover:text-primary" title="编辑">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  <button class="text-gray-400 hover:text-danger" title="删除">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500 mb-3">系统最高权限，可访问和管理所有功能</p>
+              <div class="flex justify-between items-center text-xs text-gray-500">
+                <span>用户数: 2</span>
+                <button class="text-primary">权限配置</button>
+              </div>
+            </div>
+            
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+              <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium">管理员</h4>
+                <div class="flex gap-1">
+                  <button class="text-gray-400 hover:text-primary" title="编辑">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  <button class="text-gray-400 hover:text-danger" title="删除">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500 mb-3">综合办公室：主任、秘书长等管理人员</p>
+              <div class="flex justify-between items-center text-xs text-gray-500">
+                <span>用户数: 8</span>
+                <button class="text-primary">权限配置</button>
+              </div>
+            </div>
+            
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+              <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium">研究室主任</h4>
+                <div class="flex gap-1">
+                  <button class="text-gray-400 hover:text-primary" title="编辑">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  <button class="text-gray-400 hover:text-danger" title="删除">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500 mb-3">各研究室负责人，管理本研究室相关事务</p>
+              <div class="flex justify-between items-center text-xs text-gray-500">
+                <span>用户数: 20</span>
+                <button class="text-primary">权限配置</button>
+              </div>
+            </div>
+            
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+              <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium">课题负责人</h4>
+                <div class="flex gap-1">
+                  <button class="text-gray-400 hover:text-primary" title="编辑">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  <button class="text-gray-400 hover:text-danger" title="删除">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500 mb-3">负责具体课题研究的人员</p>
+              <div class="flex justify-between items-center text-xs text-gray-500">
+                <span>用户数: 45</span>
+                <button class="text-primary">权限配置</button>
+              </div>
+            </div>
+            
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+              <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium">普通科研人员</h4>
+                <div class="flex gap-1">
+                  <button class="text-gray-400 hover:text-primary" title="编辑">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  <button class="text-gray-400 hover:text-danger" title="删除">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500 mb-3">参与科研工作的普通研究人员</p>
+              <div class="flex justify-between items-center text-xs text-gray-500">
+                <span>用户数: 89</span>
+                <button class="text-primary">权限配置</button>
+              </div>
+            </div>
+            
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+              <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium">专家评审</h4>
+                <div class="flex gap-1">
+                  <button class="text-gray-400 hover:text-primary" title="编辑">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  <button class="text-gray-400 hover:text-danger" title="删除">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500 mb-3">参与项目和成果评审的专家</p>
+              <div class="flex justify-between items-center text-xs text-gray-500">
+                <span>用户数: 36</span>
+                <button class="text-primary">权限配置</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 用户管理 -->
+        <div class="card">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">用户管理</h3>
+            <div class="flex gap-2">
+              <button class="btn btn-outline">
+                <i class="fa fa-download"></i>
+                <span>导出</span>
+              </button>
+              <button class="btn btn-outline">
+                <i class="fa fa-refresh"></i>
+                <span>刷新</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">ID</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">姓名</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">所属机构</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">角色</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">最后登录</th>
+                  <th class="px-4 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">操作</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">USR001</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <div class="flex items-center gap-2">
+                      <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">张</div>
+                      <span class="text-sm">张三</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">综合办公室</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">系统超管</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">活跃</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-15 09:23</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                    <button class="text-gray-500 hover:text-gray-700 mr-3">重置密码</button>
+                    <button class="text-danger hover:text-danger/80">禁用</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">USR002</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <div class="flex items-center gap-2">
+                      <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">李</div>
+                      <span class="text-sm">李四</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">第一研究室</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">研究室主任</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">活跃</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-14 15:47</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                    <button class="text-gray-500 hover:text-gray-700 mr-3">重置密码</button>
+                    <button class="text-danger hover:text-danger/80">禁用</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">USR003</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <div class="flex items-center gap-2">
+                      <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">王</div>
+                      <span class="text-sm">王五</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">第二研究室</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">课题负责人</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">活跃</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-13 11:05</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                    <button class="text-gray-500 hover:text-gray-700 mr-3">重置密码</button>
+                    <button class="text-danger hover:text-danger/80">禁用</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">USR004</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <div class="flex items-center gap-2">
+                      <div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">赵</div>
+                      <span class="text-sm">赵六</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">第三研究室</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">普通科研人员</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-500">未激活</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">-</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                    <button class="text-gray-500 hover:text-gray-700 mr-3">重置密码</button>
+                    <button class="text-danger hover:text-danger/80">禁用</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- 分页 -->
+          <div class="flex justify-between items-center mt-4">
+            <p class="text-sm text-gray-500">显示 1 到 4 条，共 128 条</p>
+            <div class="flex gap-1">
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                <i class="fa fa-chevron-left text-xs"></i>
+              </button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-primary bg-primary text-white">1</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">2</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">3</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">...</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">32</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-700 hover:bg-gray-50">
+                <i class="fa fa-chevron-right text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 消息通知页面 -->
+      <div class="page hidden" id="notifications">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">消息通知</h2>
+          <div class="flex gap-3">
+            <button class="btn btn-outline">
+              <i class="fa fa-cog"></i>
+              <span>通知设置</span>
+            </button>
+            <button class="btn btn-primary">
+              <i class="fa fa-pencil"></i>
+              <span>发送通知</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 通知筛选 -->
+        <div class="card mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">通知类型</label>
+              <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                <option value="">全部类型</option>
+                <option value="audit">审核结果通知</option>
+                <option value="project">立项通知</option>
+                <option value="conclusion">结项通知</option>
+                <option value="task">任务提醒</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">发送方式</label>
+              <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                <option value="">全部方式</option>
+                <option value="system">系统站内信</option>
+                <option value="email">邮件</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+              <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                <option value="">全部状态</option>
+                <option value="unread">未读</option>
+                <option value="read">已读</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="mt-4 flex justify-end">
+            <button class="btn btn-outline">
+              <i class="fa fa-search"></i>
+              <span>查询</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 通知列表 -->
+        <div class="card">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">通知列表</h3>
+            <div class="flex gap-2">
+              <button class="text-primary text-sm">标为全部已读</button>
+              <button class="text-danger text-sm">清空已读</button>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <!-- 未读通知 -->
+            <div class="border border-primary/30 bg-primary/5 rounded-lg p-4">
+              <div class="flex justify-between items-start mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-primary"></span>
+                  <h4 class="font-medium">审核结果通知</h4>
+                </div>
+                <span class="text-xs text-gray-500">2023-06-15 09:30</span>
+              </div>
+              <p class="text-sm mb-3">您提交的"人工智能在材料科学中的应用研究"项目审核已通过，详情请查看项目管理页面。</p>
+              <div class="flex justify-end gap-2">
+                <button class="text-xs text-gray-500 hover:text-gray-700">标记已读</button>
+                <button class="text-xs text-gray-500 hover:text-gray-700">删除</button>
+              </div>
+            </div>
+            
+            <!-- 未读通知 -->
+            <div class="border border-primary/30 bg-primary/5 rounded-lg p-4">
+              <div class="flex justify-between items-start mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-primary"></span>
+                  <h4 class="font-medium">任务提醒</h4>
+                </div>
+                <span class="text-xs text-gray-500">2023-06-14 16:45</span>
+              </div>
+              <p class="text-sm mb-3">您有一项"2023年度研究室考核指标填报"任务将在3天后截止，请及时完成。</p>
+              <div class="flex justify-end gap-2">
+                <button class="text-xs text-gray-500 hover:text-gray-700">标记已读</button>
+                <button class="text-xs text-gray-500 hover:text-gray-700">删除</button>
+              </div>
+            </div>
+            
+            <!-- 未读通知 -->
+            <div class="border border-primary/30 bg-primary/5 rounded-lg p-4">
+              <div class="flex justify-between items-start mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-primary"></span>
+                  <h4 class="font-medium">立项通知</h4>
+                </div>
+                <span class="text-xs text-gray-500">2023-06-12 10:15</span>
+              </div>
+              <p class="text-sm mb-3">您负责的"新型复合材料研发"项目已正式立项，项目编号：XM20230612001，请登录系统查看详细信息。</p>
+              <div class="flex justify-end gap-2">
+                <button class="text-xs text-gray-500 hover:text-gray-700">标记已读</button>
+                <button class="text-xs text-gray-500 hover:text-gray-700">删除</button>
+              </div>
+            </div>
+            
+            <!-- 已读通知 -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium">结项通知</h4>
+                <span class="text-xs text-gray-500">2023-06-10 14:20</span>
+              </div>
+              <p class="text-sm mb-3">您参与的"纳米材料制备技术研究"项目已顺利结项，结项证书已上传至系统，请查收。</p>
+              <div class="flex justify-end gap-2">
+                <button class="text-xs text-gray-500 hover:text-gray-700">删除</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 分页 -->
+          <div class="flex justify-between items-center mt-6">
+            <p class="text-sm text-gray-500">显示 1 到 4 条，共 28 条</p>
+            <div class="flex gap-1">
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                <i class="fa fa-chevron-left text-xs"></i>
+              </button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-primary bg-primary text-white">1</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">2</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">3</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">4</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">5</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-700 hover:bg-gray-50">
+                <i class="fa fa-chevron-right text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 审计与日志页面 -->
+      <div class="page hidden" id="audit-logs">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">审计与日志</h2>
+          <div class="flex gap-3">
+            <button class="btn btn-outline">
+              <i class="fa fa-download"></i>
+              <span>导出日志</span>
+            </button>
+            <button class="btn btn-primary">
+              <i class="fa fa-filter"></i>
+              <span>高级筛选</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 安全审计概览 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div class="card">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="text-lg font-semibold">安全状态</h3>
+                <p class="text-sm text-gray-500">过去7天的系统安全情况</p>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success">
+                <i class="fa fa-shield"></i>
+              </div>
+            </div>
+            
+            <div class="space-y-3 mt-4">
+              <div class="flex justify-between items-center">
+                <span class="text-sm">异常登录尝试</span>
+                <span class="text-sm font-medium">3次</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm">权限变更</span>
+                <span class="text-sm font-medium">5次</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm">敏感操作</span>
+                <span class="text-sm font-medium">12次</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm">安全告警</span>
+                <span class="text-sm font-medium text-danger">1次</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="text-lg font-semibold">操作统计</h3>
+                <p class="text-sm text-gray-500">各类操作数量统计</p>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                <i class="fa fa-bar-chart"></i>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <canvas id="operationChart" height="180"></canvas>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="text-lg font-semibold">最近告警</h3>
+                <p class="text-sm text-gray-500">需要关注的安全事件</p>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center text-warning">
+                <i class="fa fa-exclamation-triangle"></i>
+              </div>
+            </div>
+            
+            <div class="mt-4 space-y-3">
+              <div class="p-3 border border-warning/30 bg-warning/5 rounded-lg">
+                <p class="text-sm font-medium">多次登录失败</p>
+                <p class="text-xs text-gray-500 mt-1">用户"张三"在192.168.1.105尝试登录失败5次</p>
+                <p class="text-xs text-gray-500 mt-1">2023-06-14 22:35:12</p>
+              </div>
+              
+              <button class="w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors text-sm">
+                查看更多告警
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 操作日志 -->
+        <div class="card">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">操作日志</h3>
+            <div class="relative w-64">
+              <input type="text" placeholder="搜索操作或用户..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm">
+              <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">时间</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用户</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP地址</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作类型</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作内容</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">状态</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-15 09:23:45</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">张三 (系统超管)</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">192.168.1.101</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">修改</span>
+                  </td>
+                  <td class="px-4 py-3 text-sm">更新了论文指标权重配置</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">成功</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-15 08:15:22</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">李四 (研究室主任)</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">192.168.1.102</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">登录</span>
+                  </td>
+                  <td class="px-4 py-3 text-sm">用户登录系统</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">成功</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-14 16:42:18</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">张三 (系统超管)</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">192.168.1.101</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-accent/10 text-accent">创建</span>
+                  </td>
+                  <td class="px-4 py-3 text-sm">创建了新用户"赵六"</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">成功</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-14 14:30:55</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">王五 (课题负责人)</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">192.168.1.103</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">导出</span>
+                  </td>
+                  <td class="px-4 py-3 text-sm">导出了2023年度科研统计报表</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">成功</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-14 10:15:33</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">未知用户</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">203.0.113.45</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-danger/10 text-danger">登录</span>
+                  </td>
+                  <td class="px-4 py-3 text-sm">尝试登录管理员账户</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-danger/10 text-danger">失败</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- 分页 -->
+          <div class="flex justify-between items-center mt-4">
+            <p class="text-sm text-gray-500">显示 1 到 5 条，共 1254 条</p>
+            <div class="flex gap-1">
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                <i class="fa fa-chevron-left text-xs"></i>
+              </button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-primary bg-primary text-white">1</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">2</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">3</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">...</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">251</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-700 hover:bg-gray-50">
+                <i class="fa fa-chevron-right text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 数据接口服务页面 -->
+      <div class="page hidden" id="data-interface">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">数据接口服务</h2>
+          <button class="btn btn-primary">
+            <i class="fa fa-plus"></i>
+            <span>新增接口</span>
+          </button>
+        </div>
+        
+        <!-- 接口概览 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <div class="card">
+            <div class="text-center">
+              <p class="text-gray-500 text-sm mb-1">接口总数</p>
+              <p class="text-3xl font-bold mb-2">24</p>
+              <p class="text-xs text-success flex items-center justify-center">
+                <i class="fa fa-arrow-up mr-1"></i> 较上月增长 8.3%
+              </p>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="text-center">
+              <p class="text-gray-500 text-sm mb-1">活跃接口</p>
+              <p class="text-3xl font-bold mb-2">12</p>
+              <p class="text-xs text-success flex items-center justify-center">
+                <i class="fa fa-arrow-up mr-1"></i> 较上月增长 2.1%
+              </p>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="text-center">
+              <p class="text-gray-500 text-sm mb-1">今日调用量</p>
+              <p class="text-3xl font-bold mb-2">1,254</p>
+              <p class="text-xs text-danger flex items-center justify-center">
+                <i class="fa fa-arrow-down mr-1"></i> 较昨日下降 5.7%
+              </p>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="text-center">
+              <p class="text-gray-500 text-sm mb-1">接口错误率</p>
+              <p class="text-3xl font-bold mb-2">0.8%</p>
+              <p class="text-xs text-success flex items-center justify-center">
+                <i class="fa fa-arrow-down mr-1"></i> 较上周下降 0.3%
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 接口列表 -->
+        <div class="card">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">接口列表</h3>
+            <div class="relative w-64">
+              <input type="text" placeholder="搜索接口名称或路径..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm">
+              <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">接口名称</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">接口路径</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">方法</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">今日调用</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建时间</th>
+                  <th class="px-4 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">操作</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">获取论文列表</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-primary">/api/papers</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">GET</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">启用</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">328</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-03-15</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">详情</button>
+                    <button class="text-gray-500 hover:text-gray-700 mr-3">编辑</button>
+                    <button class="text-danger hover:text-danger/80">禁用</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">提交专利信息</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-primary">/api/patents</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">POST</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">启用</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">156</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-04-02</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">详情</button>
+                    <button class="text-gray-500 hover:text-gray-700 mr-3">编辑</button>
+                    <button class="text-danger hover:text-danger/80">禁用</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">获取用户信息</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-primary">/api/users/{id}</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">GET</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">启用</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">421</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-02-28</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">详情</button>
+                    <button class="text-gray-500 hover:text-gray-700 mr-3">编辑</button>
+                    <button class="text-danger hover:text-danger/80">禁用</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">更新项目状态</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm text-primary">/api/projects/{id}</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-warning/10 text-warning">PUT</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-500">禁用</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">0</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-01-10</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">详情</button>
+                    <button class="text-gray-500 hover:text-gray-700 mr-3">编辑</button>
+                    <button class="text-success hover:text-success/80">启用</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- 分页 -->
+          <div class="flex justify-between items-center mt-4">
+            <p class="text-sm text-gray-500">显示 1 到 4 条，共 24 条</p>
+            <div class="flex gap-1">
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                <i class="fa fa-chevron-left text-xs"></i>
+              </button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-primary bg-primary text-white">1</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">2</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">3</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">4</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">5</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">6</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-700 hover:bg-gray-50">
+                <i class="fa fa-chevron-right text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 统计报表导出页面 -->
+      <div class="page hidden" id="reports">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">统计报表导出</h2>
+          <button class="btn btn-primary">
+            <i class="fa fa-history"></i>
+            <span>导出历史</span>
+          </button>
+        </div>
+        
+        <!-- 报表类型 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          <div class="card cursor-pointer hover:border-primary transition-colors">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold">研究室考核报表</h3>
+                <p class="text-sm text-gray-500 mt-1">各研究室年度考核指标完成情况统计</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <i class="fa fa-bar-chart"></i>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">Excel</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">PDF</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">CSV</span>
+              </div>
+              
+              <button class="w-full btn btn-outline">
+                <i class="fa fa-download"></i>
+                <span>生成报表</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="card cursor-pointer hover:border-primary transition-colors">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold">科研成果统计</h3>
+                <p class="text-sm text-gray-500 mt-1">论文、专利、获奖等科研成果汇总统计</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+                <i class="fa fa-pie-chart"></i>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">Excel</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">PDF</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">CSV</span>
+              </div>
+              
+              <button class="w-full btn btn-outline">
+                <i class="fa fa-download"></i>
+                <span>生成报表</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="card cursor-pointer hover:border-primary transition-colors">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold">项目经费使用报表</h3>
+                <p class="text-sm text-gray-500 mt-1">各类科研项目经费使用情况统计</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+                <i class="fa fa-money"></i>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">Excel</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">PDF</span>
+              </div>
+              
+              <button class="w-full btn btn-outline">
+                <i class="fa fa-download"></i>
+                <span>生成报表</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="card cursor-pointer hover:border-primary transition-colors">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold">人才队伍统计</h3>
+                <p class="text-sm text-gray-500 mt-1">研究人员职称、学历、获奖等情况统计</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center text-success">
+                <i class="fa fa-users"></i>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">Excel</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">PDF</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">CSV</span>
+              </div>
+              
+              <button class="w-full btn btn-outline">
+                <i class="fa fa-download"></i>
+                <span>生成报表</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="card cursor-pointer hover:border-primary transition-colors">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold">设备使用统计</h3>
+                <p class="text-sm text-gray-500 mt-1">实验室设备使用频次、时长等统计</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center text-warning">
+                <i class="fa fa-cogs"></i>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">Excel</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">PDF</span>
+              </div>
+              
+              <button class="w-full btn btn-outline">
+                <i class="fa fa-download"></i>
+                <span>生成报表</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="card cursor-pointer hover:border-primary transition-colors">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="text-lg font-semibold">自定义报表</h3>
+                <p class="text-sm text-gray-500 mt-1">根据自定义条件生成统计报表</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-danger/10 flex items-center justify-center text-danger">
+                <i class="fa fa-sliders"></i>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">Excel</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">PDF</span>
+                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">CSV</span>
+              </div>
+              
+              <button class="w-full btn btn-outline">
+                <i class="fa fa-cog"></i>
+                <span>配置报表</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 报表生成配置 -->
+        <div class="card">
+          <h3 class="text-lg font-semibold mb-4">报表生成配置</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">报表类型</label>
+              <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                <option value="">请选择报表类型</option>
+                <option value="lab_assessment">研究室考核报表</option>
+                <option value="research_achievements">科研成果统计</option>
+                <option value="project_funds">项目经费使用报表</option>
+                <option value="talent_statistics">人才队伍统计</option>
+                <option value="equipment_usage">设备使用统计</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">时间范围</label>
+              <div class="flex gap-2">
+                <input type="date" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                <span class="flex items-center text-gray-500">至</span>
+                <input type="date" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">导出格式</label>
+              <div class="flex gap-2 flex-wrap">
+                <label class="inline-flex items-center">
+                  <input type="radio" name="format" value="excel" class="form-radio text-primary">
+                  <span class="ml-2 text-sm">Excel</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="radio" name="format" value="pdf" class="form-radio text-primary">
+                  <span class="ml-2 text-sm">PDF</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="radio" name="format" value="csv" class="form-radio text-primary">
+                  <span class="ml-2 text-sm">CSV</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="lg:col-span-3">
+              <label class="block text-sm font-medium text-gray-700 mb-1">研究室/部门（可选）</label>
+              <div class="flex flex-wrap gap-2">
+                <label class="inline-flex items-center px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer hover:bg-gray-50">
+                  <input type="checkbox" class="form-checkbox text-primary">
+                  <span class="ml-2">第一研究室</span>
+                </label>
+                <label class="inline-flex items-center px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer hover:bg-gray-50">
+                  <input type="checkbox" class="form-checkbox text-primary">
+                  <span class="ml-2">第二研究室</span>
+                </label>
+                <label class="inline-flex items-center px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer hover:bg-gray-50">
+                  <input type="checkbox" class="form-checkbox text-primary">
+                  <span class="ml-2">第三研究室</span>
+                </label>
+                <label class="inline-flex items-center px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer hover:bg-gray-50">
+                  <input type="checkbox" class="form-checkbox text-primary">
+                  <span class="ml-2">第四研究室</span>
+                </label>
+                <label class="inline-flex items-center px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer hover:bg-gray-50">
+                  <input type="checkbox" class="form-checkbox text-primary">
+                  <span class="ml-2">更多...</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="lg:col-span-3">
+              <label class="block text-sm font-medium text-gray-700 mb-1">报表内容选项</label>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="form-checkbox text-primary" checked>
+                  <span class="ml-2 text-sm">基本统计数据</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="form-checkbox text-primary" checked>
+                  <span class="ml-2 text-sm">图表可视化</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="form-checkbox text-primary">
+                  <span class="ml-2 text-sm">趋势分析</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="form-checkbox text-primary">
+                  <span class="ml-2 text-sm">与去年对比</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="form-checkbox text-primary">
+                  <span class="ml-2 text-sm">详细记录</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="checkbox" class="form-checkbox text-primary">
+                  <span class="ml-2 text-sm">导出原始数据</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 flex justify-end gap-3">
+            <button class="btn btn-outline">
+              <i class="fa fa-refresh"></i>
+              <span>重置</span>
+            </button>
+            <button class="btn btn-primary">
+              <i class="fa fa-download"></i>
+              <span>生成并导出</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 评审经费管理页面 -->
+      <div class="page hidden" id="fund-management">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold">评审经费管理</h2>
+          <div class="flex gap-3">
+            <button class="btn btn-outline">
+              <i class="fa fa-download"></i>
+              <span>导出数据</span>
+            </button>
+            <button class="btn btn-primary">
+              <i class="fa fa-plus"></i>
+              <span>新增经费</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 经费概览 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div class="card">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">年度总预算</p>
+                <p class="text-3xl font-bold mt-1">¥500,000</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <i class="fa fa-money"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">已使用经费</p>
+                <p class="text-3xl font-bold mt-1 text-success">¥285,600</p>
+                <p class="text-xs text-success mt-1">占总预算的 57.1%</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center text-success">
+                <i class="fa fa-arrow-down"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-gray-500 text-sm">剩余经费</p>
+                <p class="text-3xl font-bold mt-1 text-warning">¥214,400</p>
+                <p class="text-xs text-warning mt-1">占总预算的 42.9%</p>
+              </div>
+              <div class="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center text-warning">
+                <i class="fa fa-arrow-up"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 经费使用趋势 -->
+        <div class="card mb-6">
+          <h3 class="text-lg font-semibold mb-4">经费使用趋势</h3>
+          <div class="h-64">
+            <canvas id="fundTrendChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- 经费明细 -->
+        <div class="card">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">经费明细</h3>
+            <div class="relative w-64">
+              <input type="text" placeholder="搜索项目或用途..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm">
+              <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tl-lg">日期</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">项目名称</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用途</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">金额(元)</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">经手人</th>
+                  <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                  <th class="px-4 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg">操作</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-10</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">年度研究室考核评审</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">专家评审费</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">¥85,000</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">张三</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">已支付</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">详情</button>
+                    <button class="text-gray-500 hover:text-gray-700">凭证</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-05-25</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">专利成果评审会</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">专家评审费、场地费</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">¥45,600</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">李四</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">已支付</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">详情</button>
+                    <button class="text-gray-500 hover:text-gray-700">凭证</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-04-18</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">国家项目申报评审</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">专家评审费、资料印刷费</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">¥120,000</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">王五</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-success/10 text-success">已支付</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">详情</button>
+                    <button class="text-gray-500 hover:text-gray-700">凭证</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">2023-06-15</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">人才项目评审会</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">专家评审费、差旅费</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">¥35,000</td>
+                  <td class="px-4 py-3 whitespace-nowrap text-sm">赵六</td>
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs rounded-full bg-warning/10 text-warning">待支付</span>
+                  </td>
+                  <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                    <button class="text-primary hover:text-primary/80 mr-3">详情</button>
+                    <button class="text-success hover:text-success/80">审批</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- 分页 -->
+          <div class="flex justify-between items-center mt-4">
+            <p class="text-sm text-gray-500">显示 1 到 4 条，共 18 条</p>
+            <div class="flex gap-1">
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                <i class="fa fa-chevron-left text-xs"></i>
+              </button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-primary bg-primary text-white">1</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">2</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">3</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">4</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-50">5</button>
+              <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-700 hover:bg-gray-50">
+                <i class="fa fa-chevron-right text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-white border-t border-gray-200 py-4">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <p class="text-sm text-gray-500">© 2023 科研管理系统. 保留所有权利.</p>
+        <div class="flex gap-4 mt-2 md:mt-0">
+          <a href="#" class="text-sm text-gray-500 hover:text-primary">帮助中心</a>
+          <a href="#" class="text-sm text-gray-500 hover:text-primary">隐私政策</a>
+          <a href="#" class="text-sm text-gray-500 hover:text-primary">联系我们</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 引入Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- 页面交互脚本 -->
+  <script>
+    // 页面切换功能
+    document.addEventListener('DOMContentLoaded', function() {
+      // 侧边栏导航点击事件
+      const sidebarItems = document.querySelectorAll('.sidebar-item');
+      const pages = document.querySelectorAll('.page');
+      const cards = document.querySelectorAll('.card[data-target]');
+      
+      function switchPage(targetId) {
+        // 隐藏所有页面
+        pages.forEach(page => {
+          page.classList.add('hidden');
+        });
+        
+        // 显示目标页面
+        const targetPage = document.getElementById(targetId);
+        if (targetPage) {
+          targetPage.classList.remove('hidden');
+        }
+        
+        // 更新侧边栏选中状态
+        sidebarItems.forEach(item => {
+          item.classList.remove('active');
+          if (item.getAttribute('data-target') === targetId) {
+            item.classList.add('active');
+          }
+        });
+      }
+      
+      // 侧边栏项目点击
+      sidebarItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          switchPage(targetId);
+        });
+      });
+      
+      // 卡片点击跳转
+      cards.forEach(card => {
+        card.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          switchPage(targetId);
+        });
+      });
+      
+      // 初始化图表
+      initCharts();
+    });
+    
+    // 初始化图表
+    function initCharts() {
+      // 操作统计图表
+      const operationCtx = document.getElementById('operationChart');
+      if (operationCtx) {
+        new Chart(operationCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['登录', '查询', '修改', '创建', '删除', '导出'],
+            datasets: [{
+              data: [35, 25, 15, 10, 5, 10],
+              backgroundColor: [
+                '#165DFF',
+                '#36CFC9',
+                '#722ED1',
+                '#FAAD14',
+                '#FF4D4F',
+                '#52C41A'
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  boxWidth: 12,
+                  padding: 15,
+                  font: {
+                    size: 11
+                  }
+                }
+              }
+            },
+            cutout: '70%'
+          }
+        });
+      }
+      
+      // 经费趋势图表
+      const fundCtx = document.getElementById('fundTrendChart');
+      if (fundCtx) {
+        new Chart(fundCtx, {
+          type: 'line',
+          data: {
+            labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            datasets: [{
+              label: '月度支出',
+              data: [25000, 32000, 18000, 45000, 62000, 53600, 0, 0, 0, 0, 0, 0],
+              borderColor: '#165DFF',
+              backgroundColor: 'rgba(22, 93, 255, 0.1)',
+              tension: 0.3,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    return '¥' + value.toLocaleString();
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
